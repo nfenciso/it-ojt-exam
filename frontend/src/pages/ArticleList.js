@@ -17,8 +17,13 @@ export default class ArticleList extends Component {
   }
 
   openModal(article) {
+    document.getElementById("modal-title").innerText = article.title;
+    document.getElementById("modal-accountAndDate").innerText = article.author + " | " + article.date;
+    let content = article.content.replace(/\n/g, ' ');
+    document.getElementById("modal-content").innerText = content;
+
     totalHeight = document.documentElement.scrollHeight;
-    currHeight = document.documentElement.scrollTop + 40;
+    currHeight = document.documentElement.scrollTop + 90;
 
     document.getElementById("modal-background").style.height = totalHeight + "px";
     document.getElementById("modal").style.top = currHeight + "px";
@@ -39,7 +44,7 @@ export default class ArticleList extends Component {
   render() {
     window.onscroll = () => {
         if (displayedModal) {
-            currHeight = document.documentElement.scrollTop + 40;
+            currHeight = document.documentElement.scrollTop + 90;
             document.getElementById("modal").style.top = currHeight + "px";
         }
     }
@@ -60,11 +65,20 @@ export default class ArticleList extends Component {
 
             <div id="modal-background" onClick={()=>{this.closeModal()}}></div>
             <div id="modal">
-                <div>
-                    <p>Some text in the Modal..</p>
-                    <button id="close">X</button>
+                <table style={{width: "100%"}}>
+                    <tbody>
+                        <tr>
+                            <td id="modal-title"></td>
+                            <td id="modal-close"><button onClick={()=>{this.closeModal()}}>X</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p id="modal-accountAndDate"></p>
+                <div id="modal-content"></div>
+                <div id="modal-buttons">
+                    <button className="publishButton" id="modal-publish">Publish</button>
+                    <button className="deleteButton" id="modal-delete">Delete</button>
                 </div>
-                
             </div>
             
             {
