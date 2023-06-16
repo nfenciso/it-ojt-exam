@@ -5,6 +5,8 @@ import profileImage from "./assets/account_circle_green.png";
 import dateImage from "./assets/date_range_green.png";
 import viewImage from "./assets/visibility_blue.png";
 
+var totalHeight = 0;
+
 export default class ArticleList extends Component {
 
   constructor(props) {
@@ -12,9 +14,19 @@ export default class ArticleList extends Component {
  
   }
 
+  openModal(article) {
+    totalHeight = document.documentElement.scrollHeight;
+    console.log(totalHeight);
+
+    document.getElementById("modal-background").style.height = totalHeight + "px";
+
+    document.getElementById("modal").style.display = "block";
+    document.getElementById("modal-background").style.display = "block";
+  }
+
   render() {
     return(
-        <>
+        <div>
             <h2>News Articles</h2>
 
             <div id="topleft">
@@ -27,6 +39,16 @@ export default class ArticleList extends Component {
             
             <br/>
             <br/>
+
+            <div id="modal-background" style={{height: totalHeight}}></div>
+            <div id="modal">
+                <div>
+                    <p>Some text in the Modal..</p>
+                    <button id="close">X</button>
+                </div>
+                
+            </div>
+            
             {
                 data.map((article) => {
                     if (article.content.length > 80) {
@@ -55,8 +77,10 @@ export default class ArticleList extends Component {
                                     <td className="secondCol"></td>
                                     <td className="thirdCol">
                                         <div className="content">{article.content.substring(0,80).concat("...")}</div>
-                                        <img className="viewImage" src={viewImage} alt="view" />
-                                        <span className="readfull">Read Full</span>
+                                        <div className="selectableReadFull" onClick={() => this.openModal(article)}>
+                                            <img className="viewImage" src={viewImage} alt="view" />
+                                            <span className="readfull">Read Full</span>
+                                        </div>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -71,10 +95,11 @@ export default class ArticleList extends Component {
                     } else {
                         return(<></>)
                     }
-
                 })
+                
             }
-        </>
+            
+        </div>
     )
   }
 }
