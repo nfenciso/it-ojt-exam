@@ -5,7 +5,9 @@ import profileImage from "./assets/account_circle_green.png";
 import dateImage from "./assets/date_range_green.png";
 import viewImage from "./assets/visibility_blue.png";
 
-var totalHeight = 0;
+var totalHeight;
+var currHeight;
+var displayedModal = false;
 
 export default class ArticleList extends Component {
 
@@ -16,15 +18,31 @@ export default class ArticleList extends Component {
 
   openModal(article) {
     totalHeight = document.documentElement.scrollHeight;
-    console.log(totalHeight);
+    currHeight = document.documentElement.scrollTop + 40;
 
     document.getElementById("modal-background").style.height = totalHeight + "px";
+    document.getElementById("modal").style.top = currHeight + "px";
 
     document.getElementById("modal").style.display = "block";
     document.getElementById("modal-background").style.display = "block";
+
+    displayedModal = true;
+  }
+
+  closeModal() {
+    document.getElementById("modal").style.display = "none";
+    document.getElementById("modal-background").style.display = "none";
+
+    displayedModal = false;
   }
 
   render() {
+    window.onscroll = () => {
+        if (displayedModal) {
+            currHeight = document.documentElement.scrollTop + 40;
+            document.getElementById("modal").style.top = currHeight + "px";
+        }
+    }
     return(
         <div>
             <h2>News Articles</h2>
@@ -40,7 +58,7 @@ export default class ArticleList extends Component {
             <br/>
             <br/>
 
-            <div id="modal-background" style={{height: totalHeight}}></div>
+            <div id="modal-background" onClick={()=>{this.closeModal()}}></div>
             <div id="modal">
                 <div>
                     <p>Some text in the Modal..</p>
