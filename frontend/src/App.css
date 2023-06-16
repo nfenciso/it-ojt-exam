@@ -1,5 +1,9 @@
-.App {
-  text-align: center;
+table {
+  text-align: left;
+}
+
+.dragImage {
+  transform: scale(0.7);
 }
 
 .App-logo {
