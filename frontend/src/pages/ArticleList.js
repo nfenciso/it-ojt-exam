@@ -75,7 +75,7 @@ function ArticleList() {
     const [list, setList] = React.useState(data);
 
     function deleteOpened(id) {
-        const newList = list.filter((article) => article.id != id);
+        const newList = list.filter((article) => article.id !== id);
 
         checkedList.splice(checkedList.indexOf(id),1);
 
