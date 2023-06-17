@@ -1,4 +1,5 @@
-import React, { Component } from "react";
+import React from "react";
+// import { Component } from "react";
 import data from "./assets/MOCK_DATA.json";
 import dragImage from "./assets/drag_indicator_square_cropped.png";
 import profileImage from "./assets/account_circle_green.png";
