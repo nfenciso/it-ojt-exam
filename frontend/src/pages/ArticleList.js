@@ -8,54 +8,83 @@ import viewImage from "./assets/visibility_blue.png";
 var totalHeight;
 var currHeight;
 var displayedModal = false;
+var checkedList = [];
 
-export default class ArticleList extends Component {
+function ArticleList() {
 
-  constructor(props) {
-    super(props);
- 
-  }
+    function openModal(article) {
+        document.getElementById("modal-title").innerText = article.title;
+        document.getElementById("modal-accountAndDate").innerText = article.author + " | " + article.date;
+        let content = article.content.replace(/\n/g, ' ');
+        document.getElementById("modal-content").innerText = content;
 
-  openModal(article) {
-    document.getElementById("modal-title").innerText = article.title;
-    document.getElementById("modal-accountAndDate").innerText = article.author + " | " + article.date;
-    let content = article.content.replace(/\n/g, ' ');
-    document.getElementById("modal-content").innerText = content;
+        totalHeight = document.documentElement.scrollHeight;
+        currHeight = document.documentElement.scrollTop + 90;
 
-    totalHeight = document.documentElement.scrollHeight;
-    currHeight = document.documentElement.scrollTop + 90;
+        document.getElementById("modal-background").style.height = totalHeight + "px";
+        document.getElementById("modal").style.top = currHeight + "px";
 
-    document.getElementById("modal-background").style.height = totalHeight + "px";
-    document.getElementById("modal").style.top = currHeight + "px";
+        document.getElementById("modal").style.display = "block";
+        document.getElementById("modal-background").style.display = "block";
 
-    document.getElementById("modal").style.display = "block";
-    document.getElementById("modal-background").style.display = "block";
+        displayedModal = true;
+    }
 
-    displayedModal = true;
-  }
+    function closeModal() {
+        document.getElementById("modal").style.display = "none";
+        document.getElementById("modal-background").style.display = "none";
 
-  closeModal() {
-    document.getElementById("modal").style.display = "none";
-    document.getElementById("modal-background").style.display = "none";
+        displayedModal = false;
+    }
 
-    displayedModal = false;
-  }
+    function updateCheckedList(id) {
+        if (checkedList.includes(id)) {
+            let index = checkedList.indexOf(id);
+            checkedList.splice(index, 1);
+        } else {
+            checkedList.push(id);
+        }
+    }
 
-  render() {
     window.onscroll = () => {
         if (displayedModal) {
             currHeight = document.documentElement.scrollTop + 90;
             document.getElementById("modal").style.top = currHeight + "px";
         }
     }
+
+    function selectAll(e) {
+        let checked = e.target.checked;
+        let checkboxes = document.getElementsByClassName("article-checkbox");
+
+        for (let i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].checked = checked;
+        }
+
+        if (checked) {
+            checkedList = list.map((article) => article.id);
+        } else {
+            checkedList = [];
+        }
+        
+    }
+
+    const [list, setList] = React.useState(data);
+
+    function deleteChecked() {
+        const newList = list.filter((article) => checkedList.indexOf(article.id) === -1);
+
+        setList(newList);
+    }
+
     return(
         <div>
             <h2>News Articles</h2>
 
             <div id="topleft">
-            <input type="checkbox" style={{verticalAlign: "middle"}} />
+            <input type="checkbox" style={{verticalAlign: "middle"}} onClick={(e)=>{selectAll(e)}} />
             <button className="publishButton">Publish</button>
-            <button className="deleteButton">Delete</button>
+            <button className="deleteButton" onClick={()=>{deleteChecked()}} >Delete</button>
             </div>
             
             <input type="text" id="searchBar" placeholder="Search ..."></input>
@@ -63,13 +92,13 @@ export default class ArticleList extends Component {
             <br/>
             <br/>
 
-            <div id="modal-background" onClick={()=>{this.closeModal()}}></div>
+            <div id="modal-background" onClick={()=>{closeModal()}}></div>
             <div id="modal">
                 <table style={{width: "100%"}}>
                     <tbody>
                         <tr>
                             <td id="modal-title"></td>
-                            <td id="modal-close"><button onClick={()=>{this.closeModal()}}>X</button></td>
+                            <td id="modal-close"><button onClick={()=>{closeModal()}}>X</button></td>
                         </tr>
                     </tbody>
                 </table>
@@ -82,7 +111,7 @@ export default class ArticleList extends Component {
             </div>
             
             {
-                data.map((article) => {
+                list.map((article) => {
                     if (article.content.length > 80) {
                         return(
                             <div className="articleDiv" key={article.id+"-div"}>
@@ -90,7 +119,7 @@ export default class ArticleList extends Component {
                                 <tbody>
                                 <tr className="firstSubRow">
                                     <td className="firstCol"><img className="dragImage" src={dragImage} alt="drag" /></td>
-                                    <td className="secondCol"><input type="checkbox" /></td>
+                                    <td className="secondCol"><input type="checkbox" className="article-checkbox" onClick={()=>{updateCheckedList(article.id)}}  /></td>
                                     <td className="thirdCol"><span className="articleTitle">{article.title}</span></td>
                                     
                                 </tr>
@@ -109,7 +138,7 @@ export default class ArticleList extends Component {
                                     <td className="secondCol"></td>
                                     <td className="thirdCol">
                                         <div className="content">{article.content.substring(0,80).concat("...")}</div>
-                                        <div className="selectableReadFull" onClick={() => this.openModal(article)}>
+                                        <div className="selectableReadFull" onClick={() => openModal(article)}>
                                             <img className="viewImage" src={viewImage} alt="view" />
                                             <span className="readfull">Read Full</span>
                                         </div>
@@ -133,5 +162,6 @@ export default class ArticleList extends Component {
             
         </div>
     )
-  }
 }
+
+export default ArticleList;
