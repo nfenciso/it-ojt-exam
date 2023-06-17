@@ -19,6 +19,8 @@ function ArticleList() {
         let content = article.content.replace(/\n/g, ' ');
         document.getElementById("modal-content").innerText = content;
 
+        document.getElementById("modal-delete").onclick = () => deleteOpened(article.id);
+
         totalHeight = document.documentElement.scrollHeight;
         currHeight = document.documentElement.scrollTop + 90;
 
@@ -71,6 +73,16 @@ function ArticleList() {
     }
 
     const [list, setList] = React.useState(data);
+
+    function deleteOpened(id) {
+        const newList = list.filter((article) => article.id != id);
+
+        checkedList.splice(checkedList.indexOf(id),1);
+
+        setList(newList);
+
+        closeModal();
+    }
 
     function deleteChecked() {
         const newList = list.filter((article) => checkedList.indexOf(article.id) === -1);
