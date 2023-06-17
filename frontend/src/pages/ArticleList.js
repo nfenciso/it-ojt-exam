@@ -1,5 +1,4 @@
 import React from "react";
-// import { Component } from "react";
 import data from "./assets/MOCK_DATA.json";
 import Article from "./Article";
 

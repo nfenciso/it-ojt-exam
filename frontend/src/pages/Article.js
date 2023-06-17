@@ -1,5 +1,4 @@
 import React from "react";
-import data from "./assets/MOCK_DATA.json";
 import dragImage from "./assets/drag_indicator_square_cropped.png";
 import profileImage from "./assets/account_circle_green.png";
 import dateImage from "./assets/date_range_green.png";
@@ -51,9 +50,7 @@ class Article extends React.Component {
             </div>
             </div>
         )
-    };
-        
-                    
+    };   
 }
 
 export default Article;
